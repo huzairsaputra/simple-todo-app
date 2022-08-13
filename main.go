@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 
 	// "strings"
 
@@ -26,6 +27,12 @@ type TodoPageData struct {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "3000"
+	}
+
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -85,5 +92,5 @@ func main() {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	})
 
-	http.ListenAndServe("127.0.0.1:3000", nil)
+	http.ListenAndServe(":"+port, nil)
 }
